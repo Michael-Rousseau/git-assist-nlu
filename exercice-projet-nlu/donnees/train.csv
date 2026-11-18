@@ -1,0 +1,81 @@
+phrase;reponse
+commit avec le message fix du parser;git_commit | message=fix du parser
+enregistre mes changements avec le message ajout des tests;git_commit | message=ajout des tests
+fais un commit intitulé mise à jour du readme;git_commit | message=mise à jour du readme
+valide le travail avec comme message correction du login;git_commit | message=correction du login
+commite ça avec le message nettoyage du code;git_commit | message=nettoyage du code
+crée un commit nommé première version;git_commit | message=première version
+sauvegarde mon travail dans un commit qui s'appelle ajout du cache;git_commit | message=ajout du cache
+commit rapide, message : suppression des logs;git_commit | message=suppression des logs
+ajoute main.py à l'index;git_add | file=main.py
+stage le fichier config.yaml;git_add | file=config.yaml
+prépare readme.md pour le prochain commit;git_add | file=readme.md
+ajoute tous les fichiers;git_add
+mets src/app.py dans la zone de staging;git_add | file=src/app.py
+indexe le fichier tests/test_api.py;git_add | file=tests/test_api.py
+inclus docker-compose.yml dans le prochain commit;git_add | file=docker-compose.yml
+ajoute le dossier docs à la zone de staging;git_add | file=docs
+crée une branche feature-login;git_branch_create | branch=feature-login
+nouvelle branche appelée hotfix-paiement;git_branch_create | branch=hotfix-paiement
+ouvre une branche dev;git_branch_create | branch=dev
+fais-moi une branche nommée refonte-ui;git_branch_create | branch=refonte-ui
+démarre une nouvelle branche experimental;git_branch_create | branch=experimental
+crée la branche release-2;git_branch_create | branch=release-2
+j'ai besoin d'une nouvelle branche api-v2;git_branch_create | branch=api-v2
+prépare une branche qui s'appelle migration-db;git_branch_create | branch=migration-db
+supprime la branche feature-login;git_branch_delete | branch=feature-login
+efface la branche test-vieux;git_branch_delete | branch=test-vieux
+enlève la branche hotfix-paiement;git_branch_delete | branch=hotfix-paiement
+détruis la branche brouillon;git_branch_delete | branch=brouillon
+vire la branche dev;git_branch_delete | branch=dev
+retire la branche release-1;git_branch_delete | branch=release-1
+débarrasse-moi de la branche api-v1;git_branch_delete | branch=api-v1
+la branche migration-db ne sert plus, supprime-la;git_branch_delete | branch=migration-db
+va sur la branche main;git_checkout | branch=main
+bascule sur dev;git_checkout | branch=dev
+passe sur la branche feature-login;git_checkout | branch=feature-login
+change de branche pour release-2;git_checkout | branch=release-2
+retourne sur main;git_checkout | branch=main
+place-toi sur la branche hotfix-paiement;git_checkout | branch=hotfix-paiement
+je veux travailler sur la branche api-v2;git_checkout | branch=api-v2
+reviens sur la branche staging;git_checkout | branch=staging
+fusionne la branche dev;git_merge | branch=dev
+merge feature-login dans la branche courante;git_merge | branch=feature-login
+intègre la branche hotfix-paiement;git_merge | branch=hotfix-paiement
+fusionne release-2 ici;git_merge | branch=release-2
+fais un merge de refonte-ui;git_merge | branch=refonte-ui
+incorpore la branche experimental;git_merge | branch=experimental
+ramène le contenu de api-v2 dans ma branche par un merge;git_merge | branch=api-v2
+fusionne staging avec la branche actuelle;git_merge | branch=staging
+pousse sur origin;git_push | remote=origin
+envoie la branche main sur origin;git_push | remote=origin | branch=main
+pousse mes commits;git_push
+publie dev sur upstream;git_push | remote=upstream | branch=dev
+push la branche feature-login vers origin;git_push | remote=origin | branch=feature-login
+envoie mon travail sur le dépôt upstream;git_push | remote=upstream
+envoie api-v2 vers le remote origin;git_push | remote=origin | branch=api-v2
+publie mon travail;git_push
+récupère les changements de origin;git_pull | remote=origin
+tire la branche main depuis origin;git_pull | remote=origin | branch=main
+mets à jour mon dépôt local;git_pull
+pull dev depuis upstream;git_pull | remote=upstream | branch=dev
+ramène les derniers commits de upstream;git_pull | remote=upstream
+récupère la branche release-2 de origin;git_pull | remote=origin | branch=release-2
+synchronise-moi avec origin;git_pull | remote=origin
+va chercher la branche staging sur upstream;git_pull | remote=upstream | branch=staging
+montre l'historique;git_log
+affiche les 5 derniers commits;git_log | count=5
+montre l'historique du fichier main.py;git_log | file=main.py
+liste les 10 derniers commits;git_log | count=10
+quels sont les 3 derniers commits sur readme.md;git_log | count=3 | file=readme.md
+affiche le journal des commits;git_log
+qu'est-ce qui a été commité récemment;git_log
+donne-moi les 7 derniers commits de makefile;git_log | count=7 | file=makefile
+annule mes modifications sur main.py;git_restore | file=main.py
+restaure le fichier config.yaml;git_restore | file=config.yaml
+abandonne tous mes changements locaux;git_restore
+remets readme.md dans son état d'origine;git_restore | file=readme.md
+jette les modifs de src/app.py;git_restore | file=src/app.py
+annule les changements non commités;git_restore
+défais ce que j'ai changé dans docker-compose.yml;git_restore | file=docker-compose.yml
+remets tout comme au dernier commit;git_restore

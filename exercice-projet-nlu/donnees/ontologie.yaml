@@ -1,0 +1,24 @@
+# Ontologie du projet : des demandes en français -> une commande git.
+# Format d'une réponse :  <intention> | <slot>=<valeur> | <slot>=<valeur>
+# La valeur d'un slot est recopiée de la phrase, en minuscules, sans article.
+
+domaine: les demandes en langage naturel adressées à un assistant git (commits, branches, synchronisation, historique)
+
+intentions:
+  git_commit: enregistrer les changements dans un commit, avec son message
+  git_add: ajouter un fichier, un dossier ou tout à l'index (zone de staging)
+  git_branch_create: créer une nouvelle branche
+  git_branch_delete: supprimer une branche existante
+  git_checkout: se placer sur une branche existante pour y travailler
+  git_merge: fusionner une branche dans la branche courante
+  git_push: envoyer ses commits vers un dépôt distant
+  git_pull: récupérer les changements d'un dépôt distant
+  git_log: consulter l'historique des commits
+  git_restore: annuler des modifications locales non commitées
+
+slots:
+  message: le message du commit (fix du parser, ajout des tests)
+  file: un fichier ou un dossier (main.py, src/app.py, docs)
+  branch: un nom de branche (main, dev, feature-login)
+  remote: un dépôt distant (origin, upstream)
+  count: un nombre de commits à afficher (5, 10)

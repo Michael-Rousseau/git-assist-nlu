@@ -1,0 +1,15 @@
+# Environnements et caches Python
+.venv/
+__pycache__/
+.pytest_cache/
+
+# Réglages locaux (copier .env.example vers .env)
+.env
+
+# Points de contrôle d'entraînement : régénérés par main.py
+sortie_entrainement/
+
+# Archive de l'énoncé, déjà extraite dans exercice-projet-nlu/
+/exercice-projet-nlu.zip
+
+.DS_Store

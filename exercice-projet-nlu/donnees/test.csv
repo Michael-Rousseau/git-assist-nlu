@@ -1,0 +1,21 @@
+phrase;reponse
+valide tout ça, message : passage à python 3.12;git_commit | message=passage à python 3.12
+fais un commit appelé ajout du dockerfile;git_commit | message=ajout du dockerfile
+mets pyproject.toml dans l'index;git_add | file=pyproject.toml
+ajoute tout ce qui a changé;git_add
+il me faut une branche perf-tests;git_branch_create | branch=perf-tests
+crée-moi la branche docs-fr;git_branch_create | branch=docs-fr
+la branche docs-fr est inutile, enlève-la;git_branch_delete | branch=docs-fr
+fais disparaître la branche perf-tests;git_branch_delete | branch=perf-tests
+rends-toi sur la branche docs-fr;git_checkout | branch=docs-fr
+je passe sur perf-tests;git_checkout | branch=perf-tests
+intègre perf-tests dans ma branche;git_merge | branch=perf-tests
+fais la fusion de la branche docs-fr;git_merge | branch=docs-fr
+pousse docs-fr sur upstream;git_push | remote=upstream | branch=docs-fr
+envoie tout sur origin;git_push | remote=origin
+récupère ce qu'il y a de nouveau;git_pull
+tire perf-tests depuis origin;git_pull | remote=origin | branch=perf-tests
+montre-moi les 4 derniers commits;git_log | count=4
+qui a modifié pyproject.toml dernièrement;git_log | file=pyproject.toml
+oublie mes modifs sur pyproject.toml;git_restore | file=pyproject.toml
+reviens à la version propre de src/model.py;git_restore | file=src/model.py
