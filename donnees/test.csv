@@ -1,21 +1,41 @@
 phrase;reponse
-valide tout ça, message : passage à python 3.12;git_commit | message=passage à python 3.12
-fais un commit appelé ajout du dockerfile;git_commit | message=ajout du dockerfile
-mets pyproject.toml dans l'index;git_add | file=pyproject.toml
-ajoute tout ce qui a changé;git_add
-il me faut une branche perf-tests;git_branch_create | branch=perf-tests
-crée-moi la branche docs-fr;git_branch_create | branch=docs-fr
-la branche docs-fr est inutile, enlève-la;git_branch_delete | branch=docs-fr
-fais disparaître la branche perf-tests;git_branch_delete | branch=perf-tests
-rends-toi sur la branche docs-fr;git_checkout | branch=docs-fr
-je passe sur perf-tests;git_checkout | branch=perf-tests
-intègre perf-tests dans ma branche;git_merge | branch=perf-tests
-fais la fusion de la branche docs-fr;git_merge | branch=docs-fr
-pousse docs-fr sur upstream;git_push | remote=upstream | branch=docs-fr
-envoie tout sur origin;git_push | remote=origin
-récupère ce qu'il y a de nouveau;git_pull
-tire perf-tests depuis origin;git_pull | remote=origin | branch=perf-tests
-montre-moi les 4 derniers commits;git_log | count=4
-qui a modifié pyproject.toml dernièrement;git_log | file=pyproject.toml
-oublie mes modifs sur pyproject.toml;git_restore | file=pyproject.toml
-reviens à la version propre de src/model.py;git_restore | file=src/model.py
+committe mon travail, message : gestion des erreurs réseau;git_commit | message=gestion des erreurs réseau
+tu peux faire un commit qui dit ajout du mode sombre;git_commit | message=ajout du mode sombre
+un commit avec pour message mise à jour des dépendances;git_commit | message=mise à jour des dépendances
+sauvegarde ça dans un commit nommé correction du calcul de tva;git_commit | message=correction du calcul de tva
+ajoute le fichier package.json au staging;git_add | file=package.json
+je veux que styles.css parte dans le prochain commit;git_add | file=styles.css
+prends tous les fichiers modifiés pour le prochain commit;git_add
+indexe le dossier scripts;git_add | file=scripts
+crée une nouvelle branche feature-notifications;git_branch_create | branch=feature-notifications
+je voudrais une branche fix-memory-leak;git_branch_create | branch=fix-memory-leak
+lance une branche appelée poc-graphql;git_branch_create | branch=poc-graphql
+fais une branche hotfix-login pour moi;git_branch_create | branch=hotfix-login
+supprime la branche poc-graphql;git_branch_delete | branch=poc-graphql
+tu peux effacer la branche feature-notifications;git_branch_delete | branch=feature-notifications
+on n'a plus besoin de la branche fix-memory-leak, supprime-la;git_branch_delete | branch=fix-memory-leak
+enlève-moi la branche hotfix-login;git_branch_delete | branch=hotfix-login
+va sur la branche feature-notifications;git_checkout | branch=feature-notifications
+bascule-moi sur poc-graphql;git_checkout | branch=poc-graphql
+je retourne sur la branche main;git_checkout | branch=main
+place-moi sur fix-memory-leak;git_checkout | branch=fix-memory-leak
+fusionne la branche feature-notifications;git_merge | branch=feature-notifications
+merge poc-graphql dans ma branche;git_merge | branch=poc-graphql
+peux-tu intégrer la branche hotfix-login;git_merge | branch=hotfix-login
+fais la fusion de fix-memory-leak ici;git_merge | branch=fix-memory-leak
+pousse la branche feature-notifications sur origin;git_push | remote=origin | branch=feature-notifications
+envoie hotfix-login vers upstream;git_push | remote=upstream | branch=hotfix-login
+pousse tout ça;git_push
+publie mes commits sur origin;git_push | remote=origin
+récupère les derniers changements de origin;git_pull | remote=origin
+tire la branche poc-graphql depuis upstream;git_pull | remote=upstream | branch=poc-graphql
+fais un pull;git_pull
+ramène main depuis origin;git_pull | remote=origin | branch=main
+affiche les 15 derniers commits;git_log | count=15
+montre l'historique de package.json;git_log | file=package.json
+quels commits ont été faits récemment;git_log
+donne les 2 derniers commits sur styles.css;git_log | count=2 | file=styles.css
+annule mes modifications sur package.json;git_restore | file=package.json
+restaure styles.css;git_restore | file=styles.css
+abandonne tout ce que j'ai modifié;git_restore
+remets scripts/deploy.sh comme avant;git_restore | file=scripts/deploy.sh

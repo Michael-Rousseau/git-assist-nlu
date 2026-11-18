@@ -1,21 +1,41 @@
 phrase;reponse
 fais un commit avec le message refonte du menu;git_commit | message=refonte du menu
 enregistre ça sous le message correction des typos;git_commit | message=correction des typos
+commite avec le message ajout du linter;git_commit | message=ajout du linter
+je voudrais un commit intitulé nettoyage des imports;git_commit | message=nettoyage des imports
 ajoute utils.py à l'index;git_add | file=utils.py
 stage tout;git_add
+ajoute le fichier setup.cfg à l'index;git_add | file=setup.cfg
+mets tout dans le staging;git_add
 crée une branche bugfix-cache;git_branch_create | branch=bugfix-cache
 nouvelle branche nommée essai;git_branch_create | branch=essai
+crée la branche feature-search;git_branch_create | branch=feature-search
+ouvre-moi une branche nommée fix-footer;git_branch_create | branch=fix-footer
 supprime la branche essai;git_branch_delete | branch=essai
 efface la branche bugfix-cache;git_branch_delete | branch=bugfix-cache
+supprime-moi la branche feature-search;git_branch_delete | branch=feature-search
+la branche fix-footer est finie, efface-la;git_branch_delete | branch=fix-footer
 bascule sur la branche release-1;git_checkout | branch=release-1
 va sur experimental;git_checkout | branch=experimental
+passe sur feature-search;git_checkout | branch=feature-search
+retourne sur la branche fix-footer;git_checkout | branch=fix-footer
 fusionne la branche bugfix-cache;git_merge | branch=bugfix-cache
 merge main ici;git_merge | branch=main
+fusionne feature-search dans la branche courante;git_merge | branch=feature-search
+fais un merge de fix-footer;git_merge | branch=fix-footer
 pousse la branche dev sur origin;git_push | remote=origin | branch=dev
 envoie mes commits sur upstream;git_push | remote=upstream
+pousse feature-search vers origin;git_push | remote=origin | branch=feature-search
+envoie mon travail;git_push
 tire les changements depuis upstream;git_pull | remote=upstream
 récupère la branche dev de origin;git_pull | remote=origin | branch=dev
+récupère fix-footer depuis upstream;git_pull | remote=upstream | branch=fix-footer
+mets à jour ma copie locale;git_pull
 affiche les 2 derniers commits;git_log | count=2
 montre l'historique de config.yaml;git_log | file=config.yaml
+montre les 12 derniers commits;git_log | count=12
+qui a modifié setup.cfg;git_log | file=setup.cfg
 annule mes modifications sur utils.py;git_restore | file=utils.py
 abandonne mes changements;git_restore
+annule mes changements sur setup.cfg;git_restore | file=setup.cfg
+jette toutes mes modifications locales;git_restore

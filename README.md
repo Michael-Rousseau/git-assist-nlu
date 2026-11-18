@@ -18,13 +18,13 @@ suite du TP3 « porte de qualité sur une tâche NLU ».
 
 ## Résultat
 
-Sur un test de 20 phrases jamais vues pendant l'entraînement, lu une seule fois :
+Sur un test de 40 phrases jamais vues pendant l'entraînement, lu une seule fois :
 
 | | LoRA (ce projet) | modèle de base | base + prompt système |
 |---|---|---|---|
-| intention juste | **90 %** | 0 % | 0 % |
-| slots (F1) | **82 %** | 10 % | 10 % |
-| réponse entièrement juste | **70 %** | 0 % | 0 % |
+| intention juste | **92 %** (37/40) | 0 % | 0 % |
+| slots (F1) | **90 %** | 12 % | 19 % |
+| réponse entièrement juste | **88 %** (35/40) | 0 % | 0 % |
 
 Porte de qualité : **PASS** (seuil : 70 % d'intentions justes, et au moins 30
 points d'avance sur le modèle de base aidé d'un prompt).
@@ -84,28 +84,29 @@ flowchart LR
     E --> F[make evaluer<br>make demo]
 ```
 
-1. **Les données** ([`donnees/`](donnees/)) : 120 phrases rédigées pour le projet,
+1. **Les données** ([`donnees/`](donnees/)) : 230 phrases rédigées pour le projet,
    réparties en trois fichiers sans phrase commune.
 
    | Fichier | Phrases | Rôle |
    |---|---|---|
-   | `train.csv` | 80 | apprendre |
-   | `validation.csv` | 20 | régler (nombre de pas) |
-   | `test.csv` | 20 | juger, une seule fois |
+   | `train.csv` | 150 | apprendre |
+   | `validation.csv` | 40 | régler (nombre de pas) |
+   | `test.csv` | 40 | juger, une seule fois |
 
 2. **Régler sur la validation** : cinq entraînements, en ne faisant varier que le
    nombre de pas. Le test n'est pas ouvert à cette étape.
 
-   | pas | intentions justes | réponses exactes | perte de validation |
-   |---|---|---|---|
-   | 60 | 45 % | 40 % | 2.22 |
-   | 100 | 85 % | 70 % | 1.42 |
-   | 150 | 95 % | 95 % | 1.05 |
-   | **200** | **95 %** | **95 %** | **0.90** |
-   | 300 | 95 % | 90 % | 0.81 |
+   | pas | époques | intentions justes | réponses exactes | perte de validation |
+   |---|---|---|---|---|
+   | 100 | 1,3 | 72 % | 62 % | 1.60 |
+   | 200 | 2,7 | 90 % | 88 % | 1.01 |
+   | **300** | **4** | **100 %** | **100 %** | **0.86** |
+   | 400 | 5,3 | 95 % | 95 % | 0.83 |
+   | 500 | 6,7 | 98 % | 98 % | 0.81 |
 
-   En dessous de 100 pas, le modèle est sous-entraîné ; à partir de 150, les
-   scores plafonnent. Run retenu : 200 pas.
+   À 100 pas, le modèle est sous-entraîné ; à partir de 300, les scores
+   plafonnent (l'écart entre 300, 400 et 500 pas tient à une ou deux phrases).
+   Run retenu : 300 pas.
 
 3. **Juger sur le test** : le run retenu est comparé au modèle de base, seul puis
    aidé d'un prompt système. C'est le tableau du [résultat](#résultat).
@@ -122,25 +123,34 @@ flowchart LR
 ## Limites
 
 - **Le prompt système n'a pas été réglé.** La colonne « base + prompt » utilise le
-  prompt généré depuis l'ontologie, sans exemples. L'avance de 90 points surestime
+  prompt généré depuis l'ontologie, sans exemples. L'avance de 92 points surestime
   donc l'avantage du fine-tuning face à un prompt soigné.
-- **Le test est petit** : 20 phrases, une phrase vaut 5 points.
+- **Le test est petit** : 40 phrases, une phrase vaut 2,5 points.
 - **Train et test ont le même auteur**, leurs tournures se ressemblent sûrement.
   Un test écrit par quelqu'un d'autre donnerait probablement un score plus bas.
-- **Le modèle peut inventer des étiquettes** hors ontologie (`git_integration`,
-  `user=git`). `to_command` les écarte, mais pas toujours l'erreur : une demande
-  hors périmètre est rangée de force dans une intention connue.
+- **Une erreur peut être destructrice.** La structure est toujours bien formée,
+  même quand l'intention est fausse. Sur le test :
+
+  ```
+  phrase    : je retourne sur la branche main
+  structure : git_branch_delete | branch=main
+  commande  : git branch -d main
+  ```
+
+  Avant d'exécuter quoi que ce soit, il faudrait une confirmation de
+  l'utilisateur, au moins pour `git_branch_delete` et `git_restore`.
+- **Une demande hors périmètre est rangée de force** dans une intention connue :
 
   ```
   phrase    : rebase ma branche sur main
-  structure : git_pull | remote=main
-  commande  : git pull main
+  structure : git_pull | branch=main
+  commande  : git pull origin main
   ```
 
 - **Les commandes ne sont pas exécutées** : la mesure porte sur la structure, pas
   sur l'effet dans un dépôt.
 
-Le détail des erreurs du test et des choix est dans
+Le détail des erreurs du test, des choix et de l'histoire des données est dans
 [`donnees/NOTES.md`](donnees/NOTES.md).
 
 ## Refaire tout le cycle

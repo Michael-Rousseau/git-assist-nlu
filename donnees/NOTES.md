@@ -22,70 +22,90 @@ licence tierce à citer.
 
 | Fichier | Phrases | Par intention |
 |---|---|---|
-| `train.csv` | 80 | 8 |
-| `validation.csv` | 20 | 2 |
-| `test.csv` | 20 | 2 |
+| `train.csv` | 150 | 15 |
+| `validation.csv` | 40 | 4 |
+| `test.csv` | 40 | 4 |
 
 ## Choix
 
-- Train au minimum demandé (8 par intention), pas aux 15 conseillés.
-- Nombre de pas choisi sur la validation uniquement :
+- Tailles conseillées par l'énoncé : 15 phrases par intention pour apprendre, 4
+  pour la validation, 4 pour le test.
+- Nombre de pas choisi sur la validation uniquement (batch de 2, soit 75 pas par
+  époque) :
 
-| pas | val_intent_acc | val_exact | best_val_loss |
-|---|---|---|---|
-| 60 | 45 % | 40 % | 2.22 |
-| 100 | 85 % | 70 % | 1.42 |
-| 150 | 95 % | 95 % | 1.05 |
-| **200** | **95 %** | **95 %** | **0.90** |
-| 300 | 95 % | 90 % | 0.81 |
+| pas | époques | val_intent_acc | val_exact | best_val_loss |
+|---|---|---|---|---|
+| 100 | 1,3 | 72 % | 62 % | 1.60 |
+| 200 | 2,7 | 90 % | 88 % | 1.01 |
+| **300** | **4** | **100 %** | **100 %** | **0.86** |
+| 400 | 5,3 | 95 % | 95 % | 0.83 |
+| 500 | 6,7 | 98 % | 98 % | 0.81 |
 
-  Run retenu : 200 pas (égalité avec 150 sur les scores, départagée par la perte
-  de validation, règle de `juger.py`).
+  Run retenu : 300 pas, meilleur score sur la validation. Au-delà, la perte baisse
+  encore un peu mais les scores ne montent plus : l'écart entre 300, 400 et 500
+  pas tient à une ou deux phrases sur 40.
 - Prompt système : celui généré depuis l'ontologie (`prompts/systeme.txt`). Il n'a
   **pas** été réglé : ni `make prompt-systeme` ni `make prompt-exemples` n'ont été
   mesurés sur la validation.
 - Correctif du squelette : `src/generate.py` n'envoyait pas l'entrée sur le device
-  du modèle, ce qui plantait sur Mac (MPS). Ajout de `.to(model.device)`. Cinq runs
-  en échec, sans mesure, restent dans MLflow pour cette raison.
+  du modèle, ce qui plantait sur Mac (MPS). Ajout de `.to(model.device)`.
+- Ajouts propres au projet : `src/commande.py` (structure → commande git) et
+  `demo.py`.
 
-## Résultat sur le test (20 phrases)
+## Résultat sur le test (40 phrases)
 
 | | LoRA | base | base+prompt |
 |---|---|---|---|
-| intent_acc | 90 % | 0 % | 0 % |
-| slot_f1 | 82 % | 10 % | 10 % |
-| exact | 70 % | 0 % | 0 % |
+| intent_acc | 92 % (37/40) | 0 % | 0 % |
+| slot_f1 | 90 % | 12 % | 19 % |
+| exact | 88 % (35/40) | 0 % | 0 % |
 
-Porte : PASS (seuil 70 %, marge 30 points, avance mesurée +90 points).
+Porte : PASS (seuil 70 %, marge 30 points, avance mesurée +92 points).
 
-## Lectures du test
+## Lectures du test, et histoire des données
 
-`lectures_test = 1` : une seule lecture, par `make juger`, une fois données et
-réglages figés. Aucune modification des données ni des réglages ensuite.
+`lectures_test = 1` pour le test livré : une seule lecture, par `make juger`, une
+fois données et réglages figés. Rien n'a été modifié ensuite.
 
-À savoir sur l'origine de ces 20 phrases : un premier essai du même sujet a été
-fait dans le squelette du TP3, avec un autre test de 20 phrases, lu une fois. Ce
-premier test a ensuite été versé dans le train, et le test actuel est l'ancienne
-« réserve » de cet essai, jamais lue avant ce jugement.
+Ce compteur ne dit pas tout, voici l'histoire complète :
+
+1. **Premier essai** (squelette du TP3) : train 60, un test de 20 phrases lu une
+   fois.
+2. **Version 1 du projet** : ce premier test a été versé dans le train (80
+   phrases), et un autre test de 20 phrases, jamais lu, a servi à juger. Une
+   lecture. Résultat : 90 % d'intentions, 70 % de réponses exactes.
+3. **Version 2, livrée ici** : le train de 80 phrases étant au minimum de
+   l'énoncé, il a été porté à 150. Le test de la version 1, déjà lu, a été versé
+   dans le train, et **un test neuf de 40 phrases a été écrit**, puis lu une seule
+   fois. L'expérience MLflow a changé de nom (`projet-nlu-v2`), d'où le compteur
+   reparti de zéro.
+
+Aucun réglage n'a donc été choisi en regardant le test qui sert à juger. En
+revanche, les erreurs des deux tests précédents étaient connues au moment
+d'écrire les nouvelles phrases d'entraînement.
 
 ## Limites
 
 - **Colonne base+prompt faible** : le prompt n'a pas été réglé, donc l'avance de
-  90 points surestime l'avantage du fine-tuning face à un prompt soigné.
-- **Petit test** : 20 phrases, une phrase vaut 5 points.
+  92 points surestime l'avantage du fine-tuning face à un prompt soigné.
+- **Petit test** : 40 phrases, une phrase vaut 2,5 points.
 - **Même auteur pour train et test** : le test n'a pas été écrit par quelqu'un
   d'autre, les tournures se ressemblent sûrement. Le test croisé devrait donner
   un score plus bas.
-- **Erreurs observées sur le test** (6 sur 20) :
-  - intention inventée, hors ontologie : `git_integration` pour « intègre
-    perf-tests dans ma branche » ;
-  - intention fausse : `git_restore` pour « envoie tout sur origin » ;
-  - slots inventés, hors ontologie : `summary=…`, `user=git` ;
-  - slot oublié : la branche dans « tire perf-tests depuis origin » ;
-  - valeur tronquée : `pyproject.tom` ;
-  - « tout » pris pour un fichier : `file=change` pour « ajoute tout ce qui a changé ».
-- **Sortie non contrainte** : rien n'empêche le modèle de sortir une étiquette
-  hors ontologie. Un filtre sur la liste fermée serait nécessaire avant d'exécuter
-  une commande.
+- **Erreurs observées sur le test** (5 sur 40) :
+  - intention fausse, et dangereuse : « je retourne sur la branche main » →
+    `git_branch_delete | branch=main`, soit `git branch -d main` ;
+  - intention fausse : « ramène main depuis origin » → `git_restore | file=main` ;
+  - intention fausse et slot inventé en anglais : « prends tous les fichiers
+    modifiés pour le prochain commit » → `git_checkout | file=modified` ;
+  - slot inventé : `count=1` pour « quels commits ont été faits récemment » ;
+  - valeur tronquée : `deploy.sh` au lieu de `scripts/deploy.sh`.
+- **Une erreur peut être destructrice** : la structure est toujours bien formée,
+  même quand l'intention est fausse. Avant d'exécuter, il faudrait une
+  confirmation de l'utilisateur, au moins pour `git_branch_delete` et
+  `git_restore`.
+- **Demandes hors périmètre** : une demande que l'ontologie ne couvre pas (un
+  rebase, par exemple) est rangée de force dans une intention connue.
 - Les commandes ne sont pas exécutées : la mesure porte sur la structure, pas sur
-  l'effet dans un dépôt.
+  l'effet dans un dépôt. Rendue en commande, la sortie du modèle est identique à
+  l'attendu pour 35 phrases sur 40.

@@ -7,6 +7,13 @@ commite ça avec le message nettoyage du code;git_commit | message=nettoyage du 
 crée un commit nommé première version;git_commit | message=première version
 sauvegarde mon travail dans un commit qui s'appelle ajout du cache;git_commit | message=ajout du cache
 commit rapide, message : suppression des logs;git_commit | message=suppression des logs
+valide tout ça, message : passage à python 3.12;git_commit | message=passage à python 3.12
+fais un commit appelé ajout du dockerfile;git_commit | message=ajout du dockerfile
+peux-tu committer avec le message correction du bug d'affichage;git_commit | message=correction du bug d'affichage
+commit : refactor du module de paiement;git_commit | message=refactor du module de paiement
+je veux un commit dont le message est ajout de la pagination;git_commit | message=ajout de la pagination
+enregistre l'état actuel, message : wip sur l'export csv;git_commit | message=wip sur l'export csv
+fait un comit avec le mesage typo dans la doc;git_commit | message=typo dans la doc
 ajoute main.py à l'index;git_add | file=main.py
 stage le fichier config.yaml;git_add | file=config.yaml
 prépare readme.md pour le prochain commit;git_add | file=readme.md
@@ -15,6 +22,13 @@ mets src/app.py dans la zone de staging;git_add | file=src/app.py
 indexe le fichier tests/test_api.py;git_add | file=tests/test_api.py
 inclus docker-compose.yml dans le prochain commit;git_add | file=docker-compose.yml
 ajoute le dossier docs à la zone de staging;git_add | file=docs
+mets pyproject.toml dans l'index;git_add | file=pyproject.toml
+ajoute tout ce qui a changé;git_add
+ajoute requirements.txt au prochain commit;git_add | file=requirements.txt
+stage tous mes changements;git_add
+tu peux indexer le dossier src;git_add | file=src
+met index.html dans le staging;git_add | file=index.html
+ajoute tout à l'index;git_add
 crée une branche feature-login;git_branch_create | branch=feature-login
 nouvelle branche appelée hotfix-paiement;git_branch_create | branch=hotfix-paiement
 ouvre une branche dev;git_branch_create | branch=dev
@@ -23,6 +37,13 @@ démarre une nouvelle branche experimental;git_branch_create | branch=experiment
 crée la branche release-2;git_branch_create | branch=release-2
 j'ai besoin d'une nouvelle branche api-v2;git_branch_create | branch=api-v2
 prépare une branche qui s'appelle migration-db;git_branch_create | branch=migration-db
+il me faut une branche perf-tests;git_branch_create | branch=perf-tests
+crée-moi la branche docs-fr;git_branch_create | branch=docs-fr
+j'aimerais créer une branche fix-header;git_branch_create | branch=fix-header
+crée-moi une branche appelée test-perf;git_branch_create | branch=test-perf
+nouvelle branche : feature-export;git_branch_create | branch=feature-export
+il faudrait une branche nommée spike-redis;git_branch_create | branch=spike-redis
+creer la branche chore-deps;git_branch_create | branch=chore-deps
 supprime la branche feature-login;git_branch_delete | branch=feature-login
 efface la branche test-vieux;git_branch_delete | branch=test-vieux
 enlève la branche hotfix-paiement;git_branch_delete | branch=hotfix-paiement
@@ -31,6 +52,13 @@ vire la branche dev;git_branch_delete | branch=dev
 retire la branche release-1;git_branch_delete | branch=release-1
 débarrasse-moi de la branche api-v1;git_branch_delete | branch=api-v1
 la branche migration-db ne sert plus, supprime-la;git_branch_delete | branch=migration-db
+la branche docs-fr est inutile, enlève-la;git_branch_delete | branch=docs-fr
+fais disparaître la branche perf-tests;git_branch_delete | branch=perf-tests
+tu peux supprimer la branche fix-header;git_branch_delete | branch=fix-header
+la branche spike-redis est terminée, supprime-la;git_branch_delete | branch=spike-redis
+efface-moi la branche feature-export;git_branch_delete | branch=feature-export
+plus besoin de la branche test-perf, enlève-la;git_branch_delete | branch=test-perf
+suprime la branche chore-deps;git_branch_delete | branch=chore-deps
 va sur la branche main;git_checkout | branch=main
 bascule sur dev;git_checkout | branch=dev
 passe sur la branche feature-login;git_checkout | branch=feature-login
@@ -39,6 +67,13 @@ retourne sur main;git_checkout | branch=main
 place-toi sur la branche hotfix-paiement;git_checkout | branch=hotfix-paiement
 je veux travailler sur la branche api-v2;git_checkout | branch=api-v2
 reviens sur la branche staging;git_checkout | branch=staging
+rends-toi sur la branche docs-fr;git_checkout | branch=docs-fr
+je passe sur perf-tests;git_checkout | branch=perf-tests
+je veux aller sur la branche fix-header;git_checkout | branch=fix-header
+change pour la branche feature-export;git_checkout | branch=feature-export
+mets-moi sur test-perf;git_checkout | branch=test-perf
+reviens sur dev;git_checkout | branch=dev
+peux-tu basculer sur la branche spike-redis;git_checkout | branch=spike-redis
 fusionne la branche dev;git_merge | branch=dev
 merge feature-login dans la branche courante;git_merge | branch=feature-login
 intègre la branche hotfix-paiement;git_merge | branch=hotfix-paiement
@@ -47,6 +82,13 @@ fais un merge de refonte-ui;git_merge | branch=refonte-ui
 incorpore la branche experimental;git_merge | branch=experimental
 ramène le contenu de api-v2 dans ma branche par un merge;git_merge | branch=api-v2
 fusionne staging avec la branche actuelle;git_merge | branch=staging
+intègre perf-tests dans ma branche;git_merge | branch=perf-tests
+fais la fusion de la branche docs-fr;git_merge | branch=docs-fr
+fusionne fix-header dans ma branche;git_merge | branch=fix-header
+j'aimerais merger la branche feature-export;git_merge | branch=feature-export
+intègre le travail de test-perf par une fusion;git_merge | branch=test-perf
+fais un merge de la branche main;git_merge | branch=main
+merge chore-deps s'il te plaît;git_merge | branch=chore-deps
 pousse sur origin;git_push | remote=origin
 envoie la branche main sur origin;git_push | remote=origin | branch=main
 pousse mes commits;git_push
@@ -55,6 +97,13 @@ push la branche feature-login vers origin;git_push | remote=origin | branch=feat
 envoie mon travail sur le dépôt upstream;git_push | remote=upstream
 envoie api-v2 vers le remote origin;git_push | remote=origin | branch=api-v2
 publie mon travail;git_push
+pousse docs-fr sur upstream;git_push | remote=upstream | branch=docs-fr
+envoie tout sur origin;git_push | remote=origin
+pousse fix-header sur origin;git_push | remote=origin | branch=fix-header
+tu peux pousser mon travail;git_push
+envoie mes commits vers upstream;git_push | remote=upstream
+push sur origin la branche feature-export;git_push | remote=origin | branch=feature-export
+publie tout sur le dépôt distant;git_push
 récupère les changements de origin;git_pull | remote=origin
 tire la branche main depuis origin;git_pull | remote=origin | branch=main
 mets à jour mon dépôt local;git_pull
@@ -63,6 +112,13 @@ ramène les derniers commits de upstream;git_pull | remote=upstream
 récupère la branche release-2 de origin;git_pull | remote=origin | branch=release-2
 synchronise-moi avec origin;git_pull | remote=origin
 va chercher la branche staging sur upstream;git_pull | remote=upstream | branch=staging
+récupère ce qu'il y a de nouveau;git_pull
+tire perf-tests depuis origin;git_pull | remote=origin | branch=perf-tests
+récupère les nouveautés de upstream;git_pull | remote=upstream
+fais un pull de main depuis origin;git_pull | remote=origin | branch=main
+synchronise mon dépôt avec upstream;git_pull | remote=upstream
+tire fix-header depuis origin;git_pull | remote=origin | branch=fix-header
+mets-moi à jour;git_pull
 montre l'historique;git_log
 affiche les 5 derniers commits;git_log | count=5
 montre l'historique du fichier main.py;git_log | file=main.py
@@ -71,6 +127,13 @@ quels sont les 3 derniers commits sur readme.md;git_log | count=3 | file=readme.
 affiche le journal des commits;git_log
 qu'est-ce qui a été commité récemment;git_log
 donne-moi les 7 derniers commits de makefile;git_log | count=7 | file=makefile
+montre-moi les 4 derniers commits;git_log | count=4
+qui a modifié pyproject.toml dernièrement;git_log | file=pyproject.toml
+montre-moi les 8 derniers commits;git_log | count=8
+quel est l'historique de requirements.txt;git_log | file=requirements.txt
+qui a touché à index.html;git_log | file=index.html
+affiche l'historique des commits;git_log
+liste les 20 derniers commits sur src/app.py;git_log | count=20 | file=src/app.py
 annule mes modifications sur main.py;git_restore | file=main.py
 restaure le fichier config.yaml;git_restore | file=config.yaml
 abandonne tous mes changements locaux;git_restore
@@ -79,3 +142,10 @@ jette les modifs de src/app.py;git_restore | file=src/app.py
 annule les changements non commités;git_restore
 défais ce que j'ai changé dans docker-compose.yml;git_restore | file=docker-compose.yml
 remets tout comme au dernier commit;git_restore
+oublie mes modifs sur pyproject.toml;git_restore | file=pyproject.toml
+reviens à la version propre de src/model.py;git_restore | file=src/model.py
+annule mes changements dans index.html;git_restore | file=index.html
+je veux récupérer la version d'origine de requirements.txt;git_restore | file=requirements.txt
+oublie toutes mes modifications;git_restore
+défais mes modifs sur tests/test_api.py;git_restore | file=tests/test_api.py
+remets le dépôt dans un état propre;git_restore
