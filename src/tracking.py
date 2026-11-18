@@ -4,7 +4,7 @@ Le "carnet de bord" (TP2) : enregistrer dans MLflow les mesures (metrics), des
 fichiers texte et le modèle entraîné (artifact) du run courant. Les réglages
 (params) sont enregistrés dès le début du run, dans main.py.
 
-Nouveau au TP3 : un COMPTEUR de lectures du test et de la réserve, gardé sur
+TP3 : un COMPTEUR de lectures du test, gardé sur
 l'expérience MLflow. Chaque lecture d'un jeu scellé laisse une trace visible.
 """
 import tempfile
@@ -30,10 +30,10 @@ def log_run(metrics: dict, model=None, tokenizer=None, texts: dict | None = None
 
 
 def count_sealed_read(split: str) -> int:
-    """Compte une lecture du test (ou de la réserve) et renvoie le total.
+    """Compte une lecture du test et renvoie le total.
 
-    Le compteur est un tag de l'expérience principale (tp3-nlu-cycle) :
-    lectures_test / lectures_reserve. Il est visible dans MLflow.
+    Le compteur est un tag de l'expérience principale (projet-nlu) :
+    lectures_test. Il est visible dans MLflow (page Experiments, colonne Tags).
     """
     client = MlflowClient(settings.mlflow_tracking_uri)
     exp = client.get_experiment_by_name(settings.mlflow_experiment_name)
@@ -55,4 +55,4 @@ def warn_sealed_read(split: str, total: int) -> None:
     else:
         print(f"\n⚠️  {nom} lu {total} fois dans ce projet. Si une de ces lectures a "
               "influencé un choix (réglage, prompt...), son score n'est plus une "
-              "mesure honnête : c'est l'overfitting adaptatif (chapitre 7 du guide).")
+              "mesure honnête : c'est l'overfitting adaptatif (vu au TP3).")

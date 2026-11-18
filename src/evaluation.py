@@ -2,7 +2,7 @@
 """
 TP3 — MESURER et JUGER.
 
-1. evaluate_split : mesure un modèle sur UN jeu (validation, test ou réserve),
+1. evaluate_split : mesure un modèle sur UN jeu (validation ou test),
    avec ou sans prompt système. C'est l'outil de RÉGLAGE quand on l'utilise sur
    la validation.
 
@@ -22,7 +22,7 @@ from contextlib import nullcontext
 from pathlib import Path
 
 from src.config import settings
-from src.data import get_split, score
+from src.data import read_split, score
 from src.generate import generate_answer
 
 
@@ -41,22 +41,27 @@ def _avg(triples):
     }
 
 
-def evaluate_split(model, tokenizer, split: str, system: str | None = None,
-                   use_adapter: bool = True):
-    """Mesure le modèle sur un jeu. Renvoie (métriques, lignes détaillées)."""
-    ds = get_split(split)
+def evaluate_rows(model, tokenizer, rows, system: str | None = None,
+                  use_adapter: bool = True):
+    """Mesure le modèle sur une liste de (phrase, reponse). Renvoie (métriques, lignes)."""
     # Sur un modèle LoRA, use_adapter=False donne le modèle de base
     ctx = nullcontext() if use_adapter or not hasattr(model, "disable_adapter") \
         else model.disable_adapter()
-    rows, triples = [], []
+    out, triples = [], []
     with ctx:
-        for ex in ds:
-            pred = generate_answer(model, tokenizer, ex["instruction"], system=system)
-            t = score(pred, ex["response"])
+        for phrase, gold in rows:
+            pred = generate_answer(model, tokenizer, phrase, system=system)
+            t = score(pred, gold)
             triples.append(t)
-            rows.append({"phrase": ex["instruction"], "attendu": ex["response"],
-                         "obtenu": pred, "intent_ok": t[0], "exact": t[2]})
-    return _avg(triples), rows
+            out.append({"phrase": phrase, "attendu": gold, "obtenu": pred,
+                        "intent_ok": t[0], "exact": t[2]})
+    return _avg(triples), out
+
+
+def evaluate_split(model, tokenizer, split: str, system: str | None = None,
+                   use_adapter: bool = True):
+    """Mesure le modèle sur un jeu du dossier donnees/ (validation ou test)."""
+    return evaluate_rows(model, tokenizer, read_split(split), system, use_adapter)
 
 
 def print_split_report(title: str, metrics: dict, rows=None, show_errors: bool = True):
@@ -82,12 +87,13 @@ def rows_to_text(rows) -> str:
     return "\n".join(lignes) + "\n"
 
 
-def evaluate_gate(model, tokenizer, system_prompt: str):
-    """La porte : 3 colonnes sur le TEST SCELLÉ + verdict."""
-    lora, lora_rows = evaluate_split(model, tokenizer, "test")
-    base, _ = evaluate_split(model, tokenizer, "test", use_adapter=False)
-    base_prompt, _ = evaluate_split(model, tokenizer, "test", system=system_prompt,
-                                    use_adapter=False)
+def evaluate_gate(model, tokenizer, system_prompt: str, rows=None, title="TEST SCELLÉ"):
+    """La porte : 3 colonnes sur le test (par défaut donnees/test.csv) + verdict."""
+    rows = read_split("test") if rows is None else rows
+    lora, lora_rows = evaluate_rows(model, tokenizer, rows)
+    base, _ = evaluate_rows(model, tokenizer, rows, use_adapter=False)
+    base_prompt, _ = evaluate_rows(model, tokenizer, rows, system=system_prompt,
+                                   use_adapter=False)
     res = {"lora": lora, "base": base, "base_prompt": base_prompt, "lora_rows": lora_rows}
 
     margin = lora["intent_acc"] - base_prompt["intent_acc"]
@@ -95,12 +101,12 @@ def evaluate_gate(model, tokenizer, system_prompt: str):
     res["gate_passed"] = bool(lora["intent_acc"] >= settings.eval_gate_min_intent
                               and margin >= settings.eval_gate_margin
                               and lora["slot_f1"] >= settings.eval_gate_min_slot_f1)
-    _print_gate_report(res)
+    _print_gate_report(res, title)
     return res
 
 
-def _print_gate_report(res):
-    print("\n=== Résultats sur le TEST SCELLÉ (NLU) ===")
+def _print_gate_report(res, title="TEST SCELLÉ"):
+    print(f"\n=== Résultats sur le {title} ({len(res['lora_rows'])} phrases) ===")
     cols = [("LoRA", "lora"), ("base", "base"), ("base+prompt", "base_prompt")]
     print(f"{'':>12}  " + "  ".join(f"{name:>12}" for name, _ in cols))
     for metric in ("intent_acc", "slot_f1", "exact"):

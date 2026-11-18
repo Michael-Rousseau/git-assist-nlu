@@ -1,60 +1,72 @@
 # tests/test_data.py  —  lancer avec :  make test
+"""Les tests utilisent un petit jeu de données fabriqué à la volée : ils ne
+dépendent pas de ce que tu as écrit dans donnees/."""
 import pytest
 
-from src.data import (
-    ALLOWED_INTENTS, SLOT_TYPES, SPLIT_NAMES,
-    get_train_dataset, get_validation_dataset, get_test_dataset, get_reserve_dataset,
-    get_split, assert_disjoint, score, examples_for_prompt, parse_target, to_command,
-)
+from src.config import settings
+from src.data import (read_split, get_split, load_ontology, assert_disjoint, score,
+                      build_system_prompt, examples_for_prompt)
+
+ONTO = """intentions:
+  light_on: allumer
+  light_off: éteindre
+slots:
+  room: la pièce
+"""
 
 
-def test_sizes_and_disjoint():
-    assert len(get_train_dataset()) == 60
-    assert len(get_validation_dataset()) == 20
-    assert len(get_test_dataset()) == 20
-    assert len(get_reserve_dataset()) == 20
+@pytest.fixture
+def donnees(tmp_path, monkeypatch):
+    (tmp_path / "ontologie.yaml").write_text(ONTO, encoding="utf-8")
+    (tmp_path / "train.csv").write_text(
+        "phrase;reponse\nallume le salon;light_on | room=salon\n"
+        "éteins la cuisine;light_off | room=cuisine\nallume tout;light_on\n", encoding="utf-8")
+    (tmp_path / "validation.csv").write_text(
+        "phrase;reponse\nallume la chambre;light_on | room=chambre\n", encoding="utf-8")
+    (tmp_path / "test.csv").write_text(
+        "phrase;reponse\néteins le bureau;light_off | room=bureau\n", encoding="utf-8")
+    monkeypatch.setattr(settings, "donnees_dir", str(tmp_path))
+    return tmp_path
+
+
+def test_lecture(donnees):
+    assert read_split("train")[0] == ("allume le salon", "light_on | room=salon")
+    assert len(get_split("train")) == 3
+    assert list(load_ontology()["intentions"]) == ["light_on", "light_off"]
     assert_disjoint()
 
 
-def test_get_split():
-    assert len(get_split("reserve")) == 20
-    with pytest.raises(ValueError):
-        get_split("inconnu")
+def test_fuite_detectee(donnees):
+    (donnees / "test.csv").write_text("phrase;reponse\nAllume le salon;light_on | room=salon\n",
+                                      encoding="utf-8")
+    with pytest.raises(AssertionError):
+        assert_disjoint()
 
 
-@pytest.mark.parametrize("split", SPLIT_NAMES)
-def test_every_target_respects_the_ontology_and_renders_a_command(split):
-    intents_seen = set()
-    for example in get_split(split):
-        intent, slots = parse_target(example["response"])
-        intents_seen.add(intent)
-        assert intent in ALLOWED_INTENTS, example
-        assert all(slot_type in SLOT_TYPES for slot_type, _ in slots), example
-        assert to_command(example["response"]) is not None, example
-    assert intents_seen == set(ALLOWED_INTENTS)
+def test_prompt_depuis_ontologie(donnees):
+    texte = build_system_prompt(load_ontology())
+    assert "- light_on : allumer" in texte and "- room : la pièce" in texte
+    assert examples_for_prompt("train", one_per_intent=True) == [
+        ("allume le salon", "light_on | room=salon"), ("éteins la cuisine", "light_off | room=cuisine")]
 
 
-def test_scoring_exact_and_intent():
-    assert score("git_push | remote=origin", "git_push | remote=origin") == (True, 1.0, True)
-    # bonne intention, slot de mauvais TYPE -> intention ok mais pas exact
-    intent_ok, _f1, exact = score("git_checkout | file=main", "git_checkout | branch=main")
-    assert intent_ok is True and exact is False
+def test_score():
+    assert score("light_on | room=salon", "light_on | room=salon") == (True, 1.0, True)
+    assert score("light_on | room=le salon", "light_on | room=salon")[2] is True
+    io, _f1, ex = score("light_on | piece=salon", "light_on | room=salon")
+    assert io is True and ex is False
 
 
-def test_to_command():
-    assert to_command("git_push | remote=origin | branch=main") == "git push origin main"
-    assert to_command("git_pull | branch=dev") == "git pull origin dev"
-    assert to_command("git_commit | message=fix du parser") == "git commit -m 'fix du parser'"
-    assert to_command("git_log | count=3 | file=readme.md") == "git log -n 3 -- readme.md"
-    assert to_command("git_restore") == "git restore ."
-    # slot obligatoire manquant, ou intention hors ontologie : rien d'exécutable
-    assert to_command("git_merge") is None
-    assert to_command("git_rebase | branch=main") is None
+def test_prompt_sans_slot(donnees):
+    (donnees / "ontologie.yaml").write_text(
+        "domaine: le tri des avis\nintentions:\n  positif: avis content\n  negatif:\nslots: {}\n",
+        encoding="utf-8")
+    texte = build_system_prompt(load_ontology())
+    assert "le tri des avis" in texte and "- negatif\n" in texte and "slot" not in texte
 
 
-def test_prompt_examples():
-    pairs = examples_for_prompt("train", one_per_intent=True)
-    assert len(pairs) == 10
-    assert pairs[0] == ("commit avec le message fix du parser",
-                        "git_commit | message=fix du parser")
-    assert len(examples_for_prompt("test")) == 20
+def test_noms_importes():
+    from importer import nom_propre
+    assert nom_propre("Card linking") == "card_linking"
+    assert nom_propre("Négatif") == "negatif"
+    assert nom_propre(3) == "classe_3"

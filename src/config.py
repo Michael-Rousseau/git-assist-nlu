@@ -6,6 +6,7 @@ TP2 : les réglages MLflow/RustFS et configure_environment(), qui pose les
 identifiants S3 dans l'environnement (boto3/MLflow les lisent pour envoyer les
 artefacts).
 TP3 : les réglages de la porte de qualité et le fichier du prompt système.
+Exercice (sujet libre) : le dossier des données (DONNEES_DIR) et le nom du groupe.
 """
 import os
 from pydantic import Field
@@ -16,6 +17,11 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env", env_file_encoding="utf-8", case_sensitive=False
     )
+
+    # Le groupe (apparaît dans MLflow et dans le nom du livrable)
+    groupe: str = Field(default="groupe-x")
+    # Les données : ontologie.yaml + train.csv / validation.csv / test.csv
+    donnees_dir: str = Field(default="donnees")
 
     # Modèle
     model_name: str = Field(default="Qwen/Qwen3-0.6B")
@@ -40,8 +46,8 @@ class Settings(BaseSettings):
 
     # --- MLflow / RustFS (TP2) ---
     mlflow_tracking_uri: str = Field(default="http://localhost:5000")
-    mlflow_experiment_name: str = Field(default="git-nlu-cycle")
-    mlflow_prompt_experiment_name: str = Field(default="git-nlu-prompt-lab")
+    mlflow_experiment_name: str = Field(default="projet-nlu")
+    mlflow_prompt_experiment_name: str = Field(default="projet-prompt-lab")
     mlflow_s3_endpoint_url: str = Field(default="http://localhost:9000")
     aws_access_key_id: str = Field(default="rustfsadmin")
     aws_secret_access_key: str = Field(default="rustfsadmin")

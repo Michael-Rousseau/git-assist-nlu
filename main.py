@@ -1,7 +1,7 @@
 # main.py
 """
-TP3 — RÉGLER : entraîner le LoRA sur la tâche NLU et le MESURER SUR LA
-VALIDATION. Ce programme ne lit JAMAIS le test scellé.
+Exercice (projet NLU) — RÉGLER : entraîner le LoRA sur TES données (dossier
+donnees/) et le MESURER SUR LA VALIDATION. Ce programme ne lit JAMAIS le test.
 
 Enchaînement : charger -> LoRA -> entraîner (train + validation) ->
 mesurer la tâche sur la VALIDATION -> tout tracer dans MLflow.
@@ -35,13 +35,15 @@ def main():
         "lora_dropout": settings.lora_dropout,
         "train_max_steps": settings.train_max_steps,
         "train_learning_rate": settings.train_learning_rate,
-        "task": "git-nlu",
+        "task": "nlu",
+        "donnees_dir": settings.donnees_dir,
     }
 
     # Un nom lisible dans MLflow, plutôt qu'un nom tiré au hasard
     run_name = f"lora {settings.train_max_steps} pas"
     with mlflow.start_run(run_name=run_name) as run:
         print(f"MLflow run: {run.info.run_id}  ({run_name})")
+        mlflow.set_tag("groupe", settings.groupe)
         mlflow.log_params(params)
 
         model, tokenizer = load_base_model(settings.model_name)

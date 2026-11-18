@@ -1,13 +1,13 @@
 # juger.py
 """
-TP3 — JUGER : appliquer la PORTE DE QUALITÉ sur le TEST SCELLÉ, une seule fois,
+JUGER : appliquer la PORTE DE QUALITÉ sur le TEST SCELLÉ, une seule fois,
 à un modèle déjà entraîné et choisi sur la VALIDATION.
 
   uv run python juger.py            # juge le meilleur run selon la VALIDATION
   uv run python juger.py <run_id>   # juge un run précis
 
 Le modèle n'est pas réentraîné : son adaptateur LoRA est récupéré dans MLflow
-(stocké dans RustFS au TP2). Les 3 colonnes (LoRA / base / base+prompt) et le
+(stocké dans RustFS). Les 3 colonnes (LoRA / base / base+prompt) et le
 verdict PASS/FAIL sont ajoutés au même run dans MLflow.
 """
 import sys
